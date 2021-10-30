@@ -7,3 +7,6 @@ runserver:
 
 createsuperuser:
 	python manage.py createsuperuser
+
+migrate:
+	python manage.py migrate
