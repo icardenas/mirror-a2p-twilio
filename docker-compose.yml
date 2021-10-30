@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+    internal:
+        build: .
+        container_name: 'internal'
+        image: internal
+        command: make runserver
+        stdin_open: true
+        platform: linux/amd64
+        tty: true
+        volumes:
+            - .:/code
+        env_file:
+            - .env
+        ports:
+            - "0.0.0.0:${INTERNAL_PORT}:${INTERNAL_PORT}"
+        depends_on:
+            - database
+        extra_hosts:
+            - "local.apploi.com:172.17.0.1"
+
+    database:
+        image: postgres
+        container_name: 'a2p_twilio'
+        ports:
+            - '7778:5432'
+        volumes:
+            - '.:/home'
+        env_file:
+            - .env
+
+    # networks:
+    #     db_shared:
+    #         external:
+    #         name: db_network
