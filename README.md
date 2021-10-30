@@ -1,4 +1,4 @@
-# mirror-a2p-twilio
+# Mirror A2P Twilio
 This project, search all entities related to A2P in twilio (phone numbers, messaging services, campaign, A2P brand information and Profile information) and get the information, then you can audit any problem faster using the DB
 
 # Run the project
