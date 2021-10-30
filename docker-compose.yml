@@ -1,10 +1,10 @@
 version: "3"
 
 services:
-    internal:
+    a2p_twilio_app:
         build: .
-        container_name: 'internal'
-        image: internal
+        container_name: 'a2p_twilio_capp'
+        image: a2p_twilio_image
         command: make runserver
         stdin_open: true
         platform: linux/amd64
@@ -14,17 +14,17 @@ services:
         env_file:
             - .env
         ports:
-            - "0.0.0.0:${INTERNAL_PORT}:${INTERNAL_PORT}"
+            - "0.0.0.0:${APP_PORT}:${APP_PORT}"
         depends_on:
             - database
         extra_hosts:
             - "local.apploi.com:172.17.0.1"
 
-    database:
+    a2p_twilio_db:
         image: postgres
-        container_name: 'a2p_twilio'
+        container_name: 'a2p_twilio_cdb'
         ports:
-            - '7778:5432'
+            - '${DB_PORT}:5432'
         volumes:
             - '.:/home'
         env_file:
