@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.10-alpine
 RUN apk --update add --virtual build-dependencies build-base libffi-dev postgresql-dev linux-headers bash cargo
 RUN mkdir /code
 WORKDIR /code

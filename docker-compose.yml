@@ -1,6 +1,28 @@
-version: "3"
+version: "3.8"
 
 services:
+    a2p_redis_db:
+        image: redis:6.2-alpine
+        container_name: a2p_redis_cdb
+        ports:
+            - '6379:6379'
+
+    a2p_mongo_db:
+        image: mongo
+        container_name: a2p_mongo_cdb
+        ports:
+            - '27017:27017'
+
+    a2p_twilio_db:
+        image: postgres
+        container_name: 'a2p_twilio_cdb'
+        ports:
+            - '${DB_PORT}:5432'
+        volumes:
+            - '.:/home'
+        env_file:
+            - .env
+
     a2p_twilio_app:
         build: .
         container_name: 'a2p_twilio_capp'
@@ -16,21 +38,36 @@ services:
         ports:
             - "0.0.0.0:${APP_PORT}:${APP_PORT}"
         depends_on:
-            - database
+            - a2p_twilio_db
+            - a2p_twilio_redis
+            - a2p_mongodb
         extra_hosts:
-            - "local.apploi.com:172.17.0.1"
+            - "local.machine.com:172.17.0.1"
 
-    a2p_twilio_db:
-        image: postgres
-        container_name: 'a2p_twilio_cdb'
-        ports:
-            - '${DB_PORT}:5432'
+    a2p_worker:
+        image: a2p_twilio_image
+        container_name: a2p_mrq_worker
+        command: make runworker
+        depends_on:
+            - a2p_twilio_db
+            - a2p_twilio_redis
+            - a2p_mongodb
         volumes:
-            - '.:/home'
+           - .:/code
         env_file:
-            - .env
+           - .env
 
-    # networks:
-    #     db_shared:
-    #         external:
-    #         name: db_network
+    a2p_dashboard:
+        image: a2p_twilio_image
+        container_name: a2p_mrq_dashboard
+        command: mrq-dashboard
+        depends_on:
+            - a2p_twilio_db
+            - a2p_twilio_redis
+            - a2p_mongodb
+        volumes:
+           - .:/code
+        env_file:
+           - .env
+        ports:
+            - "0.0.0.0:${MRQ_DASHBOARD_PORT}:7777"

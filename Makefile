@@ -10,6 +10,9 @@ make bash:
 runserver:
 	python manage.py runserver 0.0.0.0:$(APP_PORT)
 
+runworker:
+	mrq-worker
+
 create_user:
 	python manage.py createsuperuser
 
