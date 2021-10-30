@@ -5,7 +5,7 @@ SHELL := /bin/bash
 runserver:
 	python manage.py runserver 0.0.0.0:$(APP_PORT)
 
-createsuperuser:
+create_user:
 	python manage.py createsuperuser
 
 migrate:
