@@ -11,7 +11,8 @@ class AbstractModel(models.Model):
     @classmethod
     def truncate(cls):
         with connection.cursor() as cursor:
-            cursor.execute("TRUNCATE TABLE {}".format(cls._meta.db_table))
+            logger.info(f"truncate table {cls._meta.db_table}")
+            cursor.execute("TRUNCATE TABLE {} CASCADE".format(cls._meta.db_table))
 
 
 class MessagingService(AbstractModel):

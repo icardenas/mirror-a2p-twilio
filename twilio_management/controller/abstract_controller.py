@@ -12,10 +12,6 @@ class AbstractController(abc.ABC):
         self.twilio_client = TwilioClient()
         self.stast: dict = {"amount_sucessful": 0, "amount_error": 0}
         self.model = model
-        self.truncat_model()
-
-    def truncat_model(self) -> Any:
-        self.model.truncate()
 
     @abc.abstractmethod
     def get_elements(self) -> None:

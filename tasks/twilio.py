@@ -15,6 +15,7 @@ from twilio_management.models import MessagingService, PhoneNumber
 
 class GetInformation(Task):
     def run(self, params):
+        MessagingService.truncate()
         background_job_id = queue_job(
             "tasks.twilio.FillPhoneNumbers", params, queue="medium"
         )
