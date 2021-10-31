@@ -15,7 +15,7 @@ Open a terminal/bash from the same instance that are you runing
 ```
 # Execute the task
 ```
-    mrq-run --queue medium "tasks.example.Hello" '{"a": 1}'
+    mrq-run --queue medium "tasks.twilio.FillPhoneNumbers" '{"a": 1}'
 ```
 
 # Issues
