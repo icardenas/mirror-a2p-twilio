@@ -2,6 +2,7 @@ import abc
 from typing import Any
 from twilio_management.utils.client import TwilioClient
 import logging
+from django.db import transaction
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,8 @@ class AbstractController(abc.ABC):
             except Exception as e:
                 logger.error(e)
                 self.stast["amount_error"] += 1
-
+    
+    @transaction.atomic
     def save_information(self, element: Any) -> None:
         payload = {}
         for property in self.model._meta.get_fields():

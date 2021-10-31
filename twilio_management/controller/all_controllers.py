@@ -6,7 +6,13 @@ class PhoneNumberController(AbstractController):
     def get_elements(self) -> Iterator[object]:
         return self.twilio_client.connection.incoming_phone_numbers.stream()
 
+    def post_save(self, instance) -> None:
+        pass
+
 
 class MessagingServicesController(AbstractController):
     def get_elements(self) -> Iterator[object]:
-        return self.twilio_client.twilio_connection.messaging.services.stream()
+        return self.twilio_client.connection.messaging.services.stream()
+
+    def post_save(self, instance) -> None:
+        pass

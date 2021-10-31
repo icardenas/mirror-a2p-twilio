@@ -1,7 +1,9 @@
 import abc
+import logging
 from django.db import connection, models
+from django.db.backends.utils import logger
 
-
+logger=logging.getLogger(__name__)
 class AbstractModel(models.Model):
     class Meta:
         abstract = True
@@ -9,9 +11,7 @@ class AbstractModel(models.Model):
     @classmethod
     def truncate(cls):
         with connection.cursor() as cursor:
-            print("------")
-            print(cls._meta.db_table)
-            cursor.execute("TRUNCATE TABLE {} CASCADE".format(cls._meta.db_table))
+            cursor.execute("TRUNCATE TABLE {}".format(cls._meta.db_table))
 
 
 class MessagingService(AbstractModel):
@@ -21,14 +21,14 @@ class MessagingService(AbstractModel):
     date_updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=16)
 
-    inbound_request_url = models.CharField(max_length=255)
+    inbound_request_url = models.CharField(max_length=255, null=True)
     inbound_method = models.CharField(max_length=4)
-    fallback_url = models.CharField(max_length=255)
+    fallback_url = models.CharField(max_length=255, null=True)
     fallback_method = models.CharField(max_length=4)
-    status_callback = models.CharField(max_length=255)
+    status_callback = models.CharField(max_length=255, null=True)
     smart_encoding = models.BooleanField(default=False)
     fallback_to_long_code = models.BooleanField(default=False)
-    scan_message_content = models.CharField(max_length=255)
+    scan_message_content = models.CharField(max_length=255, null=True)
     usecase = models.CharField(max_length=255)
     us_app_to_person_registered = models.BooleanField(default=False)
     use_inbound_webhook_on_number = models.BooleanField(default=False)
