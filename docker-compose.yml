@@ -29,7 +29,6 @@ services:
         image: a2p_twilio_image
         command: make runserver
         stdin_open: true
-        platform: linux/amd64
         tty: true
         volumes:
             - .:/code

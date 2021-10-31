@@ -13,3 +13,10 @@ Open a terminal/bash from the same instance that are you runing
     docker exec -it a2p_twilio_capp bash
     make create_user
 ```
+# Execute the task
+```
+    mrq-run --queue medium "tasks.example.Hello" '{"a": 1}'
+```
+
+# Issues
+- The MRQ has a problem with the version of gevent > 1.4, for this reason we use the python 3.6

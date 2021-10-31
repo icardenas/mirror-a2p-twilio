@@ -41,8 +41,7 @@ USE_LARGE_JOB_IDS = False #Do not use compacted job IDs in Redis. For compatibil
 
 """ mrq-worker settings
 """
-mrq_queues = 'high, medium, low, default'
-QUEUES = mrq_queues # The queues to listen on.Defaults to default , which will listen on all queues.
+QUEUES = ('high','medium','low','default') # The queues to listen on.Defaults to default , which will listen on all queues.
 DEQUEUE_STRATEGY = "sequential"
 MAX_JOBS = 0 #Gevent:max number of jobs to do before quitting. Workaround for memory leaks in your tasks. Defaults to 0
 MAX_MEMORY = 0 #Max memory (in Mb) after which the process will be shut down. Use with PROCESS = [1-N] to have supervisord automatically respawn the worker when this happens.Defaults to 1

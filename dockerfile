@@ -1,5 +1,6 @@
-FROM python:3.10-alpine
+FROM python:3.9-alpine
 RUN apk --update add --virtual build-dependencies build-base libffi-dev postgresql-dev linux-headers bash cargo
+RUN apk --update add --virtual git-dependencies git-lfs
 RUN mkdir /code
 WORKDIR /code
 ADD . /code

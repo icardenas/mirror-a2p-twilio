@@ -1,4 +1,4 @@
 django
 gunicorn
 django-heroku
-mrq
+git+git://github.com/pricingassistant/mrq.git@5a1154d
