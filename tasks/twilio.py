@@ -3,7 +3,7 @@ django.setup()
 
 from mrq.task import Task
 from mrq.job import queue_job
-from twilio_management.controller.phone_number_controller import PhoneNumberController
+from twilio_management.controller.all_controller import PhoneNumberController
 from twilio_management.models import PhoneNumber
 
 class GetInformation(Task):

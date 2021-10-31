@@ -1,7 +1,9 @@
 import abc
 from typing import Any
 from twilio_management.utils.client import TwilioClient
+import logging
 
+logger = logging.getLogger(__name__)
 
 class AbstractController(abc.ABC):
 
@@ -16,23 +18,29 @@ class AbstractController(abc.ABC):
 
     @abc.abstractmethod
     def get_elements(self) -> None:
+        pass    
+    
+    @abc.abstractmethod
+    def post_save(self, instance) -> None:
         pass
 
     def sync_information(self) -> None:
         for element in self.get_elements():
             try:
-                self.save_information(element)
+                instance = self.save_information(element)
+
                 self.stast['amount_sucessful'] += 1
             except Exception as e:
+                logger.error(e)
                 self.stast['amount_error'] += 1
 
     def save_information(self, element: Any) -> None:
         payload = {}
-        for property in self.model.__attributes__:
-            if property != 'id':
-                payload[property] = getattr(element, property)
-        new_object = self.model(**payload)
-        new_object.save()
+        for property in self.model._meta.get_fields():
+            if property.name != 'id' and hasattr(element, property.name):
+                payload[property.name] = getattr(element, property.name)
+        instance = self.model(**payload)
+        instance.save()
 
     def get_stast(self) -> dict:
         return self.stast
