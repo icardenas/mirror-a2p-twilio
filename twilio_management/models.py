@@ -1,8 +1,8 @@
 import abc
 from django.db import connection, models
 
-class AbstractModel(models.Model):
 
+class AbstractModel(models.Model):
     class Meta:
         abstract = True
 
@@ -11,7 +11,7 @@ class AbstractModel(models.Model):
         with connection.cursor() as cursor:
             print("------")
             print(cls._meta.db_table)
-            cursor.execute('TRUNCATE TABLE {} CASCADE'.format(cls._meta.db_table))
+            cursor.execute("TRUNCATE TABLE {} CASCADE".format(cls._meta.db_table))
 
 
 class MessagingService(AbstractModel):
