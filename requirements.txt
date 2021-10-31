@@ -1,4 +1,5 @@
-django
-gunicorn
-django-heroku
+django==3.2.8
+gunicorn==20.1.0
+django-heroku==0.3.1
 git+git://github.com/pricingassistant/mrq.git@5a1154d
+twilio==7.2.0
