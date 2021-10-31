@@ -1,7 +1,20 @@
-from django.db import models
+import abc
+from django.db import connection, models
+
+class AbstractModel(models.Model):
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def truncate(cls):
+        with connection.cursor() as cursor:
+            print("------")
+            print(cls._meta.db_table)
+            cursor.execute('TRUNCATE TABLE {} CASCADE'.format(cls._meta.db_table))
 
 
-class MessagingService(models.Model):
+class MessagingService(AbstractModel):
     sid = models.CharField(max_length=34)
     friendly_name = models.CharField(max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -24,7 +37,7 @@ class MessagingService(models.Model):
         return self.friendly_name
 
 
-class Compliance(models.Model):
+class Compliance(AbstractModel):
 
     sid = models.CharField(max_length=34)
     friendly_name = models.CharField(max_length=255)
@@ -48,7 +61,7 @@ class Compliance(models.Model):
     )
 
 
-class PhoneNumber(models.Model):
+class PhoneNumber(AbstractModel):
     phone_number = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)

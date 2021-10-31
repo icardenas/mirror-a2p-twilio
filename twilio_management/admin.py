@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from twilio.models import Compliance, MessagingService, PhoneNumber
-from django.contrib import admin
+from twilio_management.models import Compliance, MessagingService, PhoneNumber
 
 
 @admin.register(PhoneNumber)
