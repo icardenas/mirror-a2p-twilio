@@ -24,7 +24,7 @@ class AbstractController(abc.ABC):
     def sync_information(self) -> None:
         for element in self.get_elements():
             try:
-                instance = self.save_information(element)
+                instance = self.save_information(element, self.model)
                 self.post_save(instance)
                 self.stast["amount_sucessful"] += 1
             except Exception as e:
@@ -32,13 +32,14 @@ class AbstractController(abc.ABC):
                 self.stast["amount_error"] += 1
     
     @transaction.atomic
-    def save_information(self, element: Any) -> None:
+    def save_information(self, element: Any, model: Any) -> None:
         payload = {}
-        for property in self.model._meta.get_fields():
+        for property in model._meta.get_fields():
             if property.name != "id" and hasattr(element, property.name):
                 payload[property.name] = getattr(element, property.name)
-        instance = self.model(**payload)
+        instance = model(**payload)
         instance.save()
+        return instance
 
     def get_stast(self) -> dict:
         return self.stast

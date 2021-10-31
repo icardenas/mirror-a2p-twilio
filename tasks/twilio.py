@@ -1,7 +1,5 @@
 import django
 
-from twilio_management.controller.all_controllers import MessagingServicesController
-
 django.setup()
 
 from mrq.task import Task
@@ -15,6 +13,7 @@ from twilio_management.models import MessagingService, PhoneNumber
 
 class GetInformation(Task):
     def run(self, params):
+        PhoneNumber.truncate()
         MessagingService.truncate()
         background_job_id = queue_job(
             "tasks.twilio.FillPhoneNumbers", params, queue="medium"

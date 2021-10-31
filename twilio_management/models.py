@@ -1,9 +1,8 @@
 import abc
 import logging
 from django.db import connection, models
-from django.db.backends.utils import logger
 
-logger=logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 class AbstractModel(models.Model):
     class Meta:
         abstract = True
@@ -42,18 +41,16 @@ class Compliance(AbstractModel):
 
     sid = models.CharField(max_length=34)
     friendly_name = models.CharField(max_length=255)
-    has_embedded_phone: models.BooleanField(default=False)
-    brand_registration_sid: models.CharField(max_length=34)
-    description: models.CharField(max_length=255)
-    # message_samples: List[str]
-    date_updated: models.DateTimeField(auto_now=True)
-    campaign_status: models.CharField(max_length=16)
-    # rate_limits:
-    campaign_id: models.CharField(max_length=34)
-    is_externally_registered: models.BooleanField(default=False)
-    has_embedded_links: models.BooleanField(default=False)
-    url: models.CharField(max_length=255)
-    sid: models.CharField(max_length=34)
+    has_embedded_phone= models.BooleanField(default=False)
+    brand_registration_sid= models.CharField(max_length=34)
+    description= models.CharField(max_length=255)
+    date_updated= models.DateTimeField(auto_now=True)
+    campaign_status= models.CharField(max_length=16)
+    campaign_id= models.CharField(max_length=34)
+    is_externally_registered= models.BooleanField(default=False)
+    has_embedded_links= models.BooleanField(default=False)
+    url= models.CharField(max_length=255)
+    sid= models.CharField(max_length=34)
     date_created = models.DateTimeField(auto_now_add=True)
     us_app_to_person_usecase = models.CharField(max_length=255)
     mock = models.BooleanField(default=False)
