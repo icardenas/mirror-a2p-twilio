@@ -6,3 +6,6 @@ select tmp.phone_number, tmp.friendly_name, tmp.sms_fallback_method, tmp.sms_fal
 from twilio_management_phonenumber tmp
 where sms_url != 'https://api.apploi.com/v1/application_message_sms/get-received' and messaging_service_id is null
 order by 1;
+--Check if Messagign service not use_inbound_webhook_on_number
+select tmm.* from twilio_management_phonenumber tmp join twilio_management_messagingservice tmm on tmm.id = tmp.messaging_service_id
+where use_inbound_webhook_on_number = true;
