@@ -38,8 +38,8 @@ services:
             - "0.0.0.0:${APP_PORT}:${APP_PORT}"
         depends_on:
             - a2p_twilio_db
-            - a2p_twilio_redis
-            - a2p_mongodb
+            - a2p_redis_db
+            - a2p_mongo_db
         extra_hosts:
             - "local.machine.com:172.17.0.1"
 
@@ -49,8 +49,8 @@ services:
         command: make runworker
         depends_on:
             - a2p_twilio_db
-            - a2p_twilio_redis
-            - a2p_mongodb
+            - a2p_redis_db
+            - a2p_mongo_db
         volumes:
            - .:/code
         env_file:
@@ -62,8 +62,8 @@ services:
         command: mrq-dashboard
         depends_on:
             - a2p_twilio_db
-            - a2p_twilio_redis
-            - a2p_mongodb
+            - a2p_redis_db
+            - a2p_mongo_db
         volumes:
            - .:/code
         env_file:

@@ -19,5 +19,8 @@ create_user:
 migrate:
 	python manage.py migrate
 
-info:
+mrq_info:
 	mrq-run --queue medium "tasks.twilio.GetInformation" '{"a": 1}'
+
+mrq_profile:
+	mrq-run --queue medium "tasks.twilio.FillCustomerProfile" '{"a": 1}'

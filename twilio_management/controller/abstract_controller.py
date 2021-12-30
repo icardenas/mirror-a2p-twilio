@@ -3,6 +3,7 @@ from typing import Any
 from twilio_management.utils.client import TwilioClient
 import logging
 from django.db import transaction
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class AbstractController(abc.ABC):
                 self.post_save(instance)
                 self.stast["amount_sucessful"] += 1
             except Exception as e:
-                logger.error(e)
+                logger.error(str(e) + " " + str(element.sid))
                 self.stast["amount_error"] += 1
     
     @transaction.atomic
@@ -37,8 +38,12 @@ class AbstractController(abc.ABC):
         for property in model._meta.get_fields():
             if property.name != "id" and hasattr(element, property.name):
                 payload[property.name] = getattr(element, property.name)
-        instance = model(**payload)
-        instance.save()
+        instance = self.model.objects.filter(sid=element.sid).first()
+        if instance:
+            print(f"Ya existe {element.sid}")
+        else:
+            instance = model(**payload)
+            instance.save()
         return instance
 
     def get_stast(self) -> dict:

@@ -1,7 +1,7 @@
 from twilio_management.controller.abstract_controller import AbstractController
 from typing import Iterator, List
 
-from twilio_management.models import Compliance, PhoneNumber
+from twilio_management.models import A2PBrand, AbstractModel, BrandRegistration, Compliance, PhoneNumber
 
 import logging
 
@@ -22,6 +22,30 @@ class MessagingServicesController(AbstractController):
         self._get_phone_numbers(instance)
         self._get_compliance(instance)
 
+    def _get_brandregistration(self, compliance) -> BrandRegistration:
+        db_brandregistration = None
+        try:
+            twilio_brandregistration = self.twilio_client.connection.messaging.brand_registrations(compliance.brand_registration_sid).fetch()
+            print(twilio_brandregistration.sid)
+            db_brandregistration = self.save_information(twilio_brandregistration, BrandRegistration)
+            db_brandregistration.save()
+            self._get_a2p_brand(db_brandregistration)
+        except Exception as e:
+            logger.error(e)
+        return db_brandregistration
+    
+    def _get_a2p_brand(self, db_brandregistration) -> A2PBrand:
+        db_a2p_brand = None
+        try:
+            a2p_brand = self.twilio_client.connection.trusthub \
+                        .trust_products(db_brandregistration.a2p_profile_bundle_sid).fetch()
+            db_a2p_brand = self.save_information(a2p_brand, A2PBrand)
+            db_brandregistration.a2p_brand = db_a2p_brand
+            db_brandregistration.save()
+        except Exception as e:
+            logger.error(f"Message {str(e)}")
+        return db_a2p_brand
+
     def _get_compliance(self, instance) -> List[Compliance]:
         new_compliances = []
         compliances = self.twilio_client.connection.messaging.services(instance.sid) \
@@ -32,6 +56,7 @@ class MessagingServicesController(AbstractController):
             db_compliance.messaging_service = instance
             db_compliance.save()
             new_compliances.append(db_compliance)
+            self._get_brandregistration(db_compliance)
         return new_compliances
         
     
@@ -51,3 +76,24 @@ class MessagingServicesController(AbstractController):
         
         return new_phone_numbers
         
+class BrandRegistrationController(AbstractController):
+    def get_elements(self) -> Iterator[object]:
+        return self.twilio_client.connection.messaging.brand_registrations.stream()
+
+    def post_save(self, instance) -> None:
+        db_a2p_brand = None
+        try:
+            a2p_brand = self.twilio_client.connection.trusthub \
+                        .trust_products(instance.a2p_profile_bundle_sid).fetch()
+            db_a2p_brand = self.save_information(a2p_brand, A2PBrand)
+            instance.a2p_brand = db_a2p_brand
+        except Exception as e:
+            logger.error(f"Message {str(e)}")
+        return db_a2p_brand
+
+class CustomerProfileController(AbstractController):
+    def get_elements(self) -> Iterator[object]:
+        return self.twilio_client.connection.trusthub.customer_profiles.stream(limit=5000, page_size=1000)
+
+    def post_save(self, instance) -> None:
+        pass
