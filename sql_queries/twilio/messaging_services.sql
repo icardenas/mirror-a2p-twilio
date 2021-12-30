@@ -10,7 +10,7 @@ where tmm.friendly_name in (select ms.friendly_name
                               and tmp.id is null)
 ORDER BY 3 desc;
 
----MS without embedded_phone or link
+---Check MS without embedded_phone or link in the campaign (wrong configuration)
 select tmc.sid, tmc.us_app_to_person_usecase, tmc.campaign_id, tmc.campaign_status, tmc.has_embedded_phone, tmc.has_embedded_links,
        tmm.sid, tmm.friendly_name, tmm.inbound_method, tmm.inbound_request_url, tmm.use_inbound_webhook_on_number
 from twilio_management_compliance tmc

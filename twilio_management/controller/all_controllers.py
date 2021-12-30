@@ -11,7 +11,18 @@ class PhoneNumberController(AbstractController):
         return self.twilio_client.connection.incoming_phone_numbers.stream()
 
     def post_save(self, instance) -> None:
-        pass
+        if instance.sms_method != 'GET' or \
+            instance.sms_fallback_method != 'GET' or  \
+            'application_message_sms' not in instance.sms_url or \
+            'application_message_sms' not in instance.sms_url:
+            #Only for Apploi
+            APPLOI_URL = "https://api.apploi.com/v1/application_message_sms/get-received"
+            # incoming_phone_number = self.twilio_client.connection.incoming_phone_numbers(
+            #     instance.sid
+            # ).update(sms_method='GET', sms_fallback_method='GET', 
+            #     sms_url=APPLOI_URL, 
+            #     sms_fallback_url=APPLOI_URL)
+            print('updated this', instance.sid, instance.sms_method, instance.sms_fallback_method, instance.sms_url, instance.sms_fallback_url)
 
 
 class MessagingServicesController(AbstractController):
@@ -68,8 +79,7 @@ class MessagingServicesController(AbstractController):
                       .list(limit=20)
         for twilio_phone_number in phone_numbers:
             db_phone_number = PhoneNumber.objects.filter(phone_number=twilio_phone_number.phone_number).first()
-            logger.error(db_phone_number)
-            logger.error(twilio_phone_number.phone_number)
+            # logger.error(db_phone_number, twilio_phone_number.phone_number)
             db_phone_number.messaging_service = instance
             db_phone_number.save()
             new_phone_numbers.append(db_phone_number)
