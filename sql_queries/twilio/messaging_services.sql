@@ -16,3 +16,9 @@ select tmc.sid, tmc.us_app_to_person_usecase, tmc.campaign_id, tmc.campaign_stat
 from twilio_management_compliance tmc
          join twilio_management_messagingservice tmm on tmc.messaging_service_id = tmm.id
 where tmc.has_embedded_phone is false or tmc.has_embedded_links=false;
+--CHeck Messaging services with problems
+select tmm.sid as service_sid, tmc.brand_registration_sid, tmm.friendly_name, tmc.campaign_status, phone_number
+from twilio_management_compliance tmc
+         left join twilio_management_messagingservice tmm on tmc.messaging_service_id = tmm.id
+         join twilio_management_phonenumber tmp on tmm.id = tmp.messaging_service_id
+where campaign_status != 'VERIFIED'
