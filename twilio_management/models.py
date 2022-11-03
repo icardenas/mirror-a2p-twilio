@@ -44,8 +44,8 @@ class BrandRegistration(AbstractModel):
         A2PBrand, on_delete=models.CASCADE, null=True
     )
     a2p_profile_bundle_sid = models.CharField(max_length=64)
-    brand_score: models.IntegerField(default=0)
-    brand_type: models.CharField(max_length=64)
+    brand_score = models.IntegerField(null=True)
+    brand_type = models.CharField(max_length=64, null=True)
     customer_profile_bundle_sid = models.CharField(max_length=64)
     date_created = models.DateTimeField(auto_now_add=False)
     date_updated = models.DateTimeField(auto_now=True)
